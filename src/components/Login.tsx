@@ -3,164 +3,222 @@ import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Activity, Mail, Lock } from 'lucide-react';
+import { Stethoscope, User, UserCheck, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [userType, setUserType] = useState<'patient' | 'researcher'>('patient');
   const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    userType: 'patient' as 'patient' | 'researcher'
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!email || !password) {
-      toast({
-        title: "Campos obrigatórios",
-        description: "Por favor, preencha todos os campos.",
-        variant: "destructive"
-      });
-      return;
-    }
+    setIsLoading(true);
 
-    setLoading(true);
-    
     try {
-      const success = await login(email, password, userType);
-      if (success) {
+      const success = await login(formData.email, formData.password, formData.userType);
+      if (!success) {
         toast({
-          title: "Login realizado com sucesso!",
-          description: `Bem-vindo(a), ${userType === 'patient' ? 'paciente' : 'pesquisador'}!`
+          title: "Erro no login",
+          description: "Credenciais inválidas. Tente novamente.",
+          variant: "destructive"
         });
       }
     } catch (error) {
       toast({
         title: "Erro no login",
-        description: "Verifique suas credenciais e tente novamente.",
+        description: "Ocorreu um erro inesperado. Tente novamente.",
         variant: "destructive"
       });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
+  };
+
+  const handleTabChange = (value: string) => {
+    setFormData(prev => ({ ...prev, userType: value as 'patient' | 'researcher' }));
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center mb-4">
-            <Activity className="h-12 w-12 text-blue-600" />
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <div className="mx-auto w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+            <Stethoscope className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">MedTracker</h1>
-          <p className="text-gray-600">Sistema de Acompanhamento Médico</p>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">MedTracker</h1>
+          <p className="text-gray-600 mt-2">Sistema de Pesquisa Clínica</p>
         </div>
 
-        <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Entrar</CardTitle>
-            <CardDescription className="text-center">
-              Acesse sua conta para continuar
+        <Card className="shadow-xl border-0">
+          <CardHeader className="space-y-1 pb-6">
+            <CardTitle className="text-2xl font-semibold text-center text-gray-900">
+              Acesse sua conta
+            </CardTitle>
+            <CardDescription className="text-center text-gray-600">
+              Entre com suas credenciais para continuar
             </CardDescription>
           </CardHeader>
-          
           <CardContent>
-            <Tabs value={userType} onValueChange={(value) => setUserType(value as 'patient' | 'researcher')}>
+            <Tabs value={formData.userType} onValueChange={handleTabChange} className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="patient" className="text-sm">Paciente</TabsTrigger>
-                <TabsTrigger value="researcher" className="text-sm">Pesquisador</TabsTrigger>
+                <TabsTrigger value="patient" className="flex items-center space-x-2">
+                  <User className="h-4 w-4" />
+                  <span>Paciente</span>
+                </TabsTrigger>
+                <TabsTrigger value="researcher" className="flex items-center space-x-2">
+                  <UserCheck className="h-4 w-4" />
+                  <span>Pesquisador</span>
+                </TabsTrigger>
               </TabsList>
-              
-              <TabsContent value="patient">
+
+              <TabsContent value="patient" className="space-y-4">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        type="email"
-                        placeholder="seu@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
+                    <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="seu.email@exemplo.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      required
+                      className="h-11"
+                    />
                   </div>
-                  
                   <div className="space-y-2">
+                    <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                      Senha
+                    </Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                       <Input
-                        type="password"
-                        placeholder="Sua senha"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10"
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        value={formData.password}
+                        onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                         required
+                        className="h-11 pr-10"
                       />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4 text-gray-400" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-gray-400" />
+                        )}
+                      </Button>
                     </div>
                   </div>
-                  
                   <Button 
                     type="submit" 
-                    className="w-full bg-blue-600 hover:bg-blue-700"
-                    disabled={loading}
+                    className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                    disabled={isLoading}
                   >
-                    {loading ? 'Entrando...' : 'Entrar como Paciente'}
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Entrando...
+                      </>
+                    ) : (
+                      'Entrar como Paciente'
+                    )}
                   </Button>
                 </form>
               </TabsContent>
-              
-              <TabsContent value="researcher">
+
+              <TabsContent value="researcher" className="space-y-4">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        type="email"
-                        placeholder="pesquisador@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
+                    <Label htmlFor="email-researcher" className="text-sm font-medium text-gray-700">
+                      Email
+                    </Label>
+                    <Input
+                      id="email-researcher"
+                      type="email"
+                      placeholder="pesquisador@exemplo.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      required
+                      className="h-11"
+                    />
                   </div>
-                  
                   <div className="space-y-2">
+                    <Label htmlFor="password-researcher" className="text-sm font-medium text-gray-700">
+                      Senha
+                    </Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                       <Input
-                        type="password"
-                        placeholder="Sua senha"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10"
+                        id="password-researcher"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        value={formData.password}
+                        onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                         required
+                        className="h-11 pr-10"
                       />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4 text-gray-400" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-gray-400" />
+                        )}
+                      </Button>
                     </div>
                   </div>
-                  
                   <Button 
                     type="submit" 
-                    className="w-full bg-green-600 hover:bg-green-700"
-                    disabled={loading}
+                    className="w-full h-11 bg-green-600 hover:bg-green-700 text-white font-medium"
+                    disabled={isLoading}
                   >
-                    {loading ? 'Entrando...' : 'Entrar como Pesquisador'}
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Entrando...
+                      </>
+                    ) : (
+                      'Entrar como Pesquisador'
+                    )}
                   </Button>
                 </form>
               </TabsContent>
             </Tabs>
-            
-            <div className="mt-6 text-center text-sm text-gray-600">
-              <p>Credenciais de teste:</p>
-              <p>Email: qualquer@email.com | Senha: qualquer</p>
+
+            <div className="mt-6 text-center">
+              <p className="text-xs text-gray-500">
+                Esqueceu sua senha?{' '}
+                <Button variant="link" className="p-0 h-auto text-xs text-blue-600 hover:text-blue-700">
+                  Clique aqui
+                </Button>
+              </p>
             </div>
           </CardContent>
         </Card>
+
+        <div className="text-center text-xs text-gray-500">
+          © 2024 MedTracker. Todos os direitos reservados.
+        </div>
       </div>
     </div>
   );
