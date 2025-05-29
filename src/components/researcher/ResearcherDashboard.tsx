@@ -3,147 +3,296 @@ import React from 'react';
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, TrendingUp, FileText, Calendar } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { Users, TrendingUp, FileText, Calendar, Heart, Activity, AlertTriangle, BarChart3, UserCheck, Stethoscope } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const ResearcherDashboard: React.FC = () => {
   const navigate = useNavigate();
 
-  const stats = [
+  const researchMetrics = [
     {
       title: "Pacientes Ativos",
       value: "24",
-      description: "+3 este mês",
+      subtitle: "+3 novos este mês",
+      change: "+12.5%",
       icon: Users,
-      color: "text-blue-600"
+      gradient: "from-blue-500 to-blue-600",
+      bgColor: "bg-blue-50",
+      textColor: "text-blue-700"
     },
     {
       title: "Taxa de Adesão",
       value: "87%",
-      description: "+5% vs mês anterior",
+      subtitle: "↗ +5% vs mês anterior",
+      change: "+5.7%",
       icon: TrendingUp,
-      color: "text-green-600"
+      gradient: "from-emerald-500 to-emerald-600",
+      bgColor: "bg-emerald-50",
+      textColor: "text-emerald-700"
     },
     {
       title: "Consultas Hoje",
       value: "8",
-      description: "4 concluídas",
+      subtitle: "4 concluídas, 4 pendentes",
+      change: "33%",
       icon: Calendar,
-      color: "text-purple-600"
+      gradient: "from-purple-500 to-purple-600",
+      bgColor: "bg-purple-50",
+      textColor: "text-purple-700"
     },
     {
       title: "Relatórios Pendentes",
       value: "3",
-      description: "Para revisão",
+      subtitle: "Para revisão e aprovação",
+      change: "-25%",
       icon: FileText,
-      color: "text-orange-600"
+      gradient: "from-amber-500 to-amber-600",
+      bgColor: "bg-amber-50",
+      textColor: "text-amber-700"
     }
   ];
 
   const quickActions = [
     {
       title: "Acompanhar Pacientes",
-      description: "Monitorar progresso e dados",
+      description: "Monitorar progresso e dados cardiovasculares",
       action: () => navigate('/researcher/patients'),
-      color: "bg-blue-500 hover:bg-blue-600"
+      gradient: "from-blue-500 to-indigo-600",
+      icon: Users
     },
     {
       title: "Cadastrar Paciente",
-      description: "Adicionar novo participante",
+      description: "Adicionar novo participante ao estudo",
       action: () => navigate('/researcher/register'),
-      color: "bg-green-500 hover:bg-green-600"
+      gradient: "from-emerald-500 to-teal-600",
+      icon: UserCheck
     },
     {
       title: "Gerar Relatórios",
-      description: "Análises e estatísticas",
+      description: "Análises e estatísticas do estudo",
       action: () => navigate('/researcher/reports'),
-      color: "bg-purple-500 hover:bg-purple-600"
+      gradient: "from-purple-500 to-violet-600",
+      icon: BarChart3
     }
   ];
 
   const recentActivity = [
     {
       type: "patient_progress",
-      message: "João Silva avançou para etapa 3",
+      patient: "João Silva",
+      message: "avançou para etapa 3 do protocolo",
       time: "2 horas atrás",
       icon: TrendingUp,
-      color: "text-green-600"
+      color: "text-emerald-600",
+      bgColor: "bg-emerald-50"
     },
     {
       type: "new_patient",
-      message: "Maria Santos foi cadastrada no estudo",
+      patient: "Maria Santos",
+      message: "foi cadastrada no estudo cardíaco",
       time: "4 horas atrás",
       icon: Users,
-      color: "text-blue-600"
+      color: "text-blue-600",
+      bgColor: "bg-blue-50"
     },
     {
       type: "consultation",
-      message: "Consulta com Pedro Costa concluída",
+      patient: "Pedro Costa",
+      message: "consulta cardiológica concluída",
       time: "6 horas atrás",
-      icon: Calendar,
-      color: "text-purple-600"
+      icon: Stethoscope,
+      color: "text-purple-600",
+      bgColor: "bg-purple-50"
+    },
+    {
+      type: "alert",
+      patient: "Ana Lima",
+      message: "apresentou alteração nos dados",
+      time: "1 dia atrás",
+      icon: AlertTriangle,
+      color: "text-amber-600",
+      bgColor: "bg-amber-50"
+    }
+  ];
+
+  const priorityPatients = [
+    {
+      name: "Ana Costa",
+      issue: "Atraso na medicação cardiovascular",
+      risk: "Médio",
+      lastUpdate: "2 dias atrás",
+      color: "border-amber-200 bg-amber-50"
+    },
+    {
+      name: "Carlos Lima", 
+      issue: "Consulta de follow-up amanhã",
+      risk: "Baixo",
+      lastUpdate: "Hoje",
+      color: "border-blue-200 bg-blue-50"
+    },
+    {
+      name: "Roberto Silva",
+      issue: "Excelente progresso no estudo",
+      risk: "Baixo",
+      lastUpdate: "1 hora atrás",
+      color: "border-emerald-200 bg-emerald-50"
     }
   ];
 
   return (
     <Layout title="Painel do Pesquisador">
-      <div className="space-y-6">
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => (
-            <Card key={index} className="hover:shadow-lg transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                    <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                    <p className="text-sm text-gray-500">{stat.description}</p>
+      <div className="space-y-8">
+        {/* Cartão de Boas-vindas */}
+        <Card className="border-0 bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-2xl">
+          <CardContent className="p-8">
+            <div className="flex items-center justify-between">
+              <div className="space-y-3">
+                <h3 className="text-2xl font-bold">Painel de Pesquisa Cardiovascular</h3>
+                <p className="text-slate-300">
+                  Monitore o progresso dos pacientes e analise dados do estudo em tempo real.
+                </p>
+                <div className="flex items-center space-x-4 text-sm">
+                  <div className="flex items-center space-x-2">
+                    <Heart className="h-4 w-4 text-red-400" />
+                    <span>24 pacientes ativos</span>
                   </div>
-                  <stat.icon className={`h-8 w-8 ${stat.color}`} />
+                  <div className="flex items-center space-x-2">
+                    <Activity className="h-4 w-4 text-emerald-400" />
+                    <span>87% de adesão</span>
+                  </div>
+                </div>
+              </div>
+              <div className="hidden md:flex items-center space-x-3">
+                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center">
+                  <Stethoscope className="h-8 w-8 text-white" />
+                </div>
+                <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+                  <BarChart3 className="h-6 w-6 text-white" />
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Métricas de Pesquisa */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {researchMetrics.map((metric, index) => (
+            <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-slate-600">{metric.title}</p>
+                    <div className="flex items-baseline space-x-2">
+                      <p className="text-3xl font-bold text-slate-900">{metric.value}</p>
+                      <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                        metric.change.startsWith('+') ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
+                      }`}>
+                        {metric.change}
+                      </span>
+                    </div>
+                    <p className="text-sm text-slate-500">{metric.subtitle}</p>
+                  </div>
+                  <div className={`w-14 h-14 rounded-2xl ${metric.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                    <metric.icon className={`h-7 w-7 ${metric.textColor}`} />
+                  </div>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Quick Actions */}
-        <Card className="border-0 bg-white/80 backdrop-blur-sm">
+        {/* Progresso do Estudo */}
+        <Card className="border-0 shadow-lg">
           <CardHeader>
-            <CardTitle>Ações Rápidas</CardTitle>
+            <CardTitle className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
+                <BarChart3 className="h-5 w-5 text-slate-600" />
+              </div>
+              <span>Visão Geral do Estudo</span>
+            </CardTitle>
             <CardDescription>
-              Acesse rapidamente as principais funcionalidades
+              Distribuição de pacientes por etapa do protocolo cardiovascular
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {[
+                { stage: 'Triagem', count: 6, total: 24, color: 'bg-blue-500' },
+                { stage: 'Baseline', count: 8, total: 24, color: 'bg-emerald-500' },
+                { stage: 'Tratamento', count: 7, total: 24, color: 'bg-purple-500' },
+                { stage: 'Follow-up', count: 3, total: 24, color: 'bg-amber-500' }
+              ].map((item, index) => (
+                <div key={index} className="text-center space-y-3">
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-slate-600">{item.stage}</p>
+                    <p className="text-2xl font-bold text-slate-900">{item.count}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Progress value={(item.count / item.total) * 100} className="h-2" />
+                    <p className="text-xs text-slate-500">{Math.round((item.count / item.total) * 100)}% do total</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Ações Rápidas */}
+        <Card className="border-0 shadow-lg">
+          <CardHeader>
+            <CardTitle>Ações Rápidas</CardTitle>
+            <CardDescription>
+              Acesse rapidamente as principais funcionalidades de pesquisa
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {quickActions.map((action, index) => (
                 <Button
                   key={index}
                   onClick={action.action}
-                  className={`h-20 ${action.color} text-white flex flex-col items-center justify-center space-y-1`}
+                  className={`h-24 bg-gradient-to-br ${action.gradient} hover:scale-105 transition-all duration-300 text-white border-0 shadow-lg hover:shadow-xl flex flex-col items-center justify-center space-y-2 group`}
                 >
-                  <span className="font-semibold">{action.title}</span>
-                  <span className="text-xs opacity-90">{action.description}</span>
+                  <action.icon className="h-6 w-6 group-hover:scale-110 transition-transform duration-300" />
+                  <div className="text-center">
+                    <span className="font-semibold block">{action.title}</span>
+                    <span className="text-xs opacity-90 block">{action.description}</span>
+                  </div>
                 </Button>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="border-0 bg-white/80 backdrop-blur-sm">
+        {/* Atividade Recente e Pacientes Prioritários */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Atividade Recente */}
+          <Card className="border-0 shadow-lg">
             <CardHeader>
-              <CardTitle>Atividade Recente</CardTitle>
+              <CardTitle className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
+                  <Activity className="h-5 w-5 text-slate-600" />
+                </div>
+                <span>Atividade Recente</span>
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                    <activity.icon className={`h-5 w-5 ${activity.color}`} />
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{activity.message}</p>
-                      <p className="text-xs text-gray-500">{activity.time}</p>
+                  <div
+                    key={index}
+                    className={`flex items-start space-x-4 p-4 ${activity.bgColor} rounded-xl hover:scale-[1.02] transition-transform duration-300`}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center">
+                      <activity.icon className={`h-5 w-5 ${activity.color}`} />
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <p className="text-sm">
+                        <span className="font-semibold text-slate-900">{activity.patient}</span>
+                        <span className="text-slate-600"> {activity.message}</span>
+                      </p>
+                      <p className="text-xs text-slate-500">{activity.time}</p>
                     </div>
                   </div>
                 ))}
@@ -151,50 +300,42 @@ const ResearcherDashboard: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-0 bg-white/80 backdrop-blur-sm">
+          {/* Pacientes Prioritários */}
+          <Card className="border-0 shadow-lg">
             <CardHeader>
-              <CardTitle>Pacientes em Destaque</CardTitle>
+              <CardTitle className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+                  <Heart className="h-5 w-5 text-red-600" />
+                </div>
+                <span>Pacientes em Destaque</span>
+              </CardTitle>
               <CardDescription>
-                Pacientes que necessitam atenção
+                Pacientes que necessitam atenção especial
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="p-3 border border-yellow-200 bg-yellow-50 rounded-lg">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-medium">Ana Costa</p>
-                      <p className="text-sm text-gray-600">Atraso na medicação</p>
+                {priorityPatients.map((patient, index) => (
+                  <div
+                    key={index}
+                    className={`p-4 border-2 rounded-xl ${patient.color} hover:scale-[1.02] transition-transform duration-300`}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-2">
+                        <p className="font-semibold text-slate-900">{patient.name}</p>
+                        <p className="text-sm text-slate-600">{patient.issue}</p>
+                        <div className="flex items-center space-x-3 text-xs text-slate-500">
+                          <span>Risco: {patient.risk}</span>
+                          <span>•</span>
+                          <span>{patient.lastUpdate}</span>
+                        </div>
+                      </div>
+                      <Button size="sm" variant="outline" className="hover:bg-white">
+                        Ver Detalhes
+                      </Button>
                     </div>
-                    <Button size="sm" variant="outline">
-                      Ver Detalhes
-                    </Button>
                   </div>
-                </div>
-                
-                <div className="p-3 border border-blue-200 bg-blue-50 rounded-lg">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-medium">Carlos Lima</p>
-                      <p className="text-sm text-gray-600">Consulta amanhã</p>
-                    </div>
-                    <Button size="sm" variant="outline">
-                      Preparar
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="p-3 border border-green-200 bg-green-50 rounded-lg">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-medium">Roberto Silva</p>
-                      <p className="text-sm text-gray-600">Excelente progresso</p>
-                    </div>
-                    <Button size="sm" variant="outline">
-                      Relatório
-                    </Button>
-                  </div>
-                </div>
+                ))}
               </div>
             </CardContent>
           </Card>
