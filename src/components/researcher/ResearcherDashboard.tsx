@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -67,13 +66,6 @@ const ResearcherDashboard: React.FC = () => {
       action: () => navigate('/researcher/register'),
       gradient: "from-emerald-500 to-teal-600",
       icon: UserCheck
-    },
-    {
-      title: "Gerar Relatórios",
-      description: "Análises e estatísticas do estudo",
-      action: () => navigate('/researcher/reports'),
-      gradient: "from-purple-500 to-violet-600",
-      icon: BarChart3
     }
   ];
 

@@ -35,6 +35,14 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
     navigate('/settings');
   };
 
+  const handleLogoClick = () => {
+    if (user?.type === 'researcher') {
+      navigate('/researcher');
+    } else if (user?.type === 'patient') {
+      navigate('/patient');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-red-50">
       {/* Header with ECG-inspired design */}
@@ -42,7 +50,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4 cursor-pointer" onClick={handleLogoClick}>
                 {/* New VivaCore Logo with heart and ECG wave */}
                 <div className="relative">
                   <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">

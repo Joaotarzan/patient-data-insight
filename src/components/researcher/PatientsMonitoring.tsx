@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -152,6 +151,14 @@ const PatientsMonitoring: React.FC = () => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('pt-BR');
+  };
+
+  const handleViewDetails = (id: string) => {
+    navigate(`/researcher/research/${id}`);
+  };
+
+  const handleEdit = (id: string) => {
+    navigate(`/researcher/research/${id}`);
   };
 
   const filteredResearch = research.filter(item => {
@@ -346,10 +353,18 @@ const PatientsMonitoring: React.FC = () => {
                       </div>
                       
                       <div className="flex items-center space-x-2 ml-4">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleViewDetails(item.id)}
+                        >
                           Ver Detalhes
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleEdit(item.id)}
+                        >
                           Editar
                         </Button>
                       </div>

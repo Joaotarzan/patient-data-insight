@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +14,7 @@ import CurrentStage from "./components/patient/CurrentStage";
 import ResearcherDashboard from "./components/researcher/ResearcherDashboard";
 import PatientsMonitoring from "./components/researcher/PatientsMonitoring";
 import RegisterPatient from "./components/researcher/RegisterPatient";
+import ResearchDetails from "./components/researcher/ResearchDetails";
 
 const queryClient = new QueryClient();
 
@@ -126,6 +126,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedUserType="researcher">
             <RegisterPatient />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/researcher/research/:id" 
+        element={
+          <ProtectedRoute allowedUserType="researcher">
+            <ResearchDetails />
           </ProtectedRoute>
         } 
       />
