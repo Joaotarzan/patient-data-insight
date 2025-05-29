@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { LogOut, User, Heart, Bell, Settings, Activity } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useNavigate } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,9 +21,18 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, title }) => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const getUserInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
+  };
+
+  const handleSettingsClick = () => {
+    navigate('/settings');
   };
 
   return (
@@ -95,11 +105,11 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
                 <DropdownMenuContent align="end" className="w-64 bg-white/95 backdrop-blur-sm border-red-100">
                   <DropdownMenuLabel className="text-slate-900">Minha Conta</DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-red-100" />
-                  <DropdownMenuItem className="hover:bg-red-50">
+                  <DropdownMenuItem onClick={handleProfileClick} className="hover:bg-red-50">
                     <User className="mr-3 h-4 w-4 text-red-600" />
                     Perfil
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="hover:bg-red-50">
+                  <DropdownMenuItem onClick={handleSettingsClick} className="hover:bg-red-50">
                     <Settings className="mr-3 h-4 w-4 text-red-600" />
                     Configurações
                   </DropdownMenuItem>

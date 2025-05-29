@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Stethoscope, User, UserCheck, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Heart, User, UserCheck, Eye, EyeOff, Loader2, Activity } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Login: React.FC = () => {
@@ -48,33 +48,55 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-red-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <div className="mx-auto w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-            <Stethoscope className="h-8 w-8 text-white" />
+          <div className="relative mx-auto w-20 h-20 mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <Heart className="h-10 w-10 text-white fill-white" />
+            </div>
+            <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">MedTracker</h1>
-          <p className="text-gray-600 mt-2">Sistema de Pesquisa Clínica</p>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent tracking-tight">
+            VivaCore
+          </h1>
+          <p className="text-slate-600 mt-2 font-medium">Sistema de Pesquisa Cardíaca</p>
+          
+          {/* ECG Wave decoration */}
+          <div className="flex items-center justify-center space-x-1 mt-4 opacity-40">
+            <Activity className="h-4 w-4 text-red-500" />
+            <div className="flex items-end space-x-0.5">
+              {[2, 8, 4, 12, 6, 3, 7, 5].map((height, index) => (
+                <div
+                  key={index}
+                  className="w-0.5 bg-red-400 rounded-full animate-pulse"
+                  style={{ 
+                    height: `${height}px`,
+                    animationDelay: `${index * 0.1}s`
+                  }}
+                />
+              ))}
+            </div>
+          </div>
         </div>
 
-        <Card className="shadow-xl border-0">
+        <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm">
           <CardHeader className="space-y-1 pb-6">
-            <CardTitle className="text-2xl font-semibold text-center text-gray-900">
+            <CardTitle className="text-2xl font-semibold text-center text-slate-900">
               Acesse sua conta
             </CardTitle>
-            <CardDescription className="text-center text-gray-600">
+            <CardDescription className="text-center text-slate-600">
               Entre com suas credenciais para continuar
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs value={formData.userType} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="patient" className="flex items-center space-x-2">
+              <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-100">
+                <TabsTrigger value="patient" className="flex items-center space-x-2 data-[state=active]:bg-red-500 data-[state=active]:text-white">
                   <User className="h-4 w-4" />
                   <span>Paciente</span>
                 </TabsTrigger>
-                <TabsTrigger value="researcher" className="flex items-center space-x-2">
+                <TabsTrigger value="researcher" className="flex items-center space-x-2 data-[state=active]:bg-red-500 data-[state=active]:text-white">
                   <UserCheck className="h-4 w-4" />
                   <span>Pesquisador</span>
                 </TabsTrigger>
@@ -83,7 +105,7 @@ const Login: React.FC = () => {
               <TabsContent value="patient" className="space-y-4">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="email" className="text-sm font-medium text-slate-700">
                       Email
                     </Label>
                     <Input
@@ -97,7 +119,7 @@ const Login: React.FC = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="password" className="text-sm font-medium text-slate-700">
                       Senha
                     </Label>
                     <div className="relative">
@@ -118,16 +140,16 @@ const Login: React.FC = () => {
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
-                          <EyeOff className="h-4 w-4 text-gray-400" />
+                          <EyeOff className="h-4 w-4 text-slate-400" />
                         ) : (
-                          <Eye className="h-4 w-4 text-gray-400" />
+                          <Eye className="h-4 w-4 text-slate-400" />
                         )}
                       </Button>
                     </div>
                   </div>
                   <Button 
                     type="submit" 
-                    className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                    className="w-full h-11 bg-red-600 hover:bg-red-700 text-white font-medium"
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -145,7 +167,7 @@ const Login: React.FC = () => {
               <TabsContent value="researcher" className="space-y-4">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email-researcher" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="email-researcher" className="text-sm font-medium text-slate-700">
                       Email
                     </Label>
                     <Input
@@ -159,7 +181,7 @@ const Login: React.FC = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password-researcher" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="password-researcher" className="text-sm font-medium text-slate-700">
                       Senha
                     </Label>
                     <div className="relative">
@@ -180,16 +202,16 @@ const Login: React.FC = () => {
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
-                          <EyeOff className="h-4 w-4 text-gray-400" />
+                          <EyeOff className="h-4 w-4 text-slate-400" />
                         ) : (
-                          <Eye className="h-4 w-4 text-gray-400" />
+                          <Eye className="h-4 w-4 text-slate-400" />
                         )}
                       </Button>
                     </div>
                   </div>
                   <Button 
                     type="submit" 
-                    className="w-full h-11 bg-green-600 hover:bg-green-700 text-white font-medium"
+                    className="w-full h-11 bg-red-600 hover:bg-red-700 text-white font-medium"
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -206,9 +228,9 @@ const Login: React.FC = () => {
             </Tabs>
 
             <div className="mt-6 text-center">
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-slate-500">
                 Esqueceu sua senha?{' '}
-                <Button variant="link" className="p-0 h-auto text-xs text-blue-600 hover:text-blue-700">
+                <Button variant="link" className="p-0 h-auto text-xs text-red-600 hover:text-red-700">
                   Clique aqui
                 </Button>
               </p>
@@ -216,8 +238,8 @@ const Login: React.FC = () => {
           </CardContent>
         </Card>
 
-        <div className="text-center text-xs text-gray-500">
-          © 2024 MedTracker. Todos os direitos reservados.
+        <div className="text-center text-xs text-slate-500">
+          © 2024 VivaCore. Todos os direitos reservados.
         </div>
       </div>
     </div>

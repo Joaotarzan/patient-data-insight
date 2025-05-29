@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Login from "./components/Login";
+import Profile from "./components/Profile";
+import Settings from "./components/Settings";
 import PatientDashboard from "./components/patient/PatientDashboard";
 import Consultations from "./components/patient/Consultations";
 import Medications from "./components/patient/Medications";
@@ -47,6 +49,24 @@ const AppRoutes = () => {
             to={user?.type === 'patient' ? '/patient' : '/researcher'} 
             replace 
           />
+        } 
+      />
+      
+      {/* Shared routes */}
+      <Route 
+        path="/profile" 
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/settings" 
+        element={
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
         } 
       />
       
