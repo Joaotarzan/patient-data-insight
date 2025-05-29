@@ -12,9 +12,9 @@ const ResearcherDashboard: React.FC = () => {
 
   const researchMetrics = [
     {
-      title: "Pacientes Ativos",
+      title: "Pesquisas Ativas",
       value: "24",
-      subtitle: "+3 novos este mês",
+      subtitle: "+3 novas este mês",
       change: "+12.5%",
       icon: Users,
       gradient: "from-blue-500 to-blue-600",
@@ -32,7 +32,7 @@ const ResearcherDashboard: React.FC = () => {
       textColor: "text-emerald-700"
     },
     {
-      title: "Consultas Hoje",
+      title: "Avaliações Hoje",
       value: "8",
       subtitle: "4 concluídas, 4 pendentes",
       change: "33%",
@@ -55,15 +55,15 @@ const ResearcherDashboard: React.FC = () => {
 
   const quickActions = [
     {
-      title: "Acompanhar Pacientes",
+      title: "Acompanhar Pesquisas",
       description: "Monitorar progresso e dados cardiovasculares",
       action: () => navigate('/researcher/patients'),
       gradient: "from-blue-500 to-indigo-600",
       icon: Users
     },
     {
-      title: "Cadastrar Paciente",
-      description: "Adicionar novo participante ao estudo",
+      title: "Cadastrar Pesquisa",
+      description: "Adicionar novo estudo cardiovascular",
       action: () => navigate('/researcher/register'),
       gradient: "from-emerald-500 to-teal-600",
       icon: UserCheck
@@ -79,8 +79,8 @@ const ResearcherDashboard: React.FC = () => {
 
   const recentActivity = [
     {
-      type: "patient_progress",
-      patient: "João Silva",
+      type: "research_progress",
+      research: "Estudo Hipertensão",
       message: "avançou para etapa 3 do protocolo",
       time: "2 horas atrás",
       icon: TrendingUp,
@@ -88,18 +88,18 @@ const ResearcherDashboard: React.FC = () => {
       bgColor: "bg-emerald-50"
     },
     {
-      type: "new_patient",
-      patient: "Maria Santos",
-      message: "foi cadastrada no estudo cardíaco",
+      type: "new_research",
+      research: "Pesquisa Cardiopatia",
+      message: "foi cadastrada no sistema",
       time: "4 horas atrás",
       icon: Users,
       color: "text-blue-600",
       bgColor: "bg-blue-50"
     },
     {
-      type: "consultation",
-      patient: "Pedro Costa",
-      message: "consulta cardiológica concluída",
+      type: "evaluation",
+      research: "Estudo Arritmia",
+      message: "avaliação cardiológica concluída",
       time: "6 horas atrás",
       icon: Stethoscope,
       color: "text-purple-600",
@@ -107,7 +107,7 @@ const ResearcherDashboard: React.FC = () => {
     },
     {
       type: "alert",
-      patient: "Ana Lima",
+      research: "Pesquisa Diabetes Cardio",
       message: "apresentou alteração nos dados",
       time: "1 dia atrás",
       icon: AlertTriangle,
@@ -116,23 +116,23 @@ const ResearcherDashboard: React.FC = () => {
     }
   ];
 
-  const priorityPatients = [
+  const priorityResearch = [
     {
-      name: "Ana Costa",
-      issue: "Atraso na medicação cardiovascular",
+      name: "Estudo Cardiopatia Congênita",
+      issue: "Atraso na coleta de dados",
       risk: "Médio",
       lastUpdate: "2 dias atrás",
       color: "border-amber-200 bg-amber-50"
     },
     {
-      name: "Carlos Lima", 
-      issue: "Consulta de follow-up amanhã",
+      name: "Pesquisa Hipertensão Arterial", 
+      issue: "Avaliação de follow-up amanhã",
       risk: "Baixo",
       lastUpdate: "Hoje",
       color: "border-blue-200 bg-blue-50"
     },
     {
-      name: "Roberto Silva",
+      name: "Estudo Insuficiência Cardíaca",
       issue: "Excelente progresso no estudo",
       risk: "Baixo",
       lastUpdate: "1 hora atrás",
@@ -150,12 +150,12 @@ const ResearcherDashboard: React.FC = () => {
               <div className="space-y-3">
                 <h3 className="text-2xl font-bold">Painel de Pesquisa Cardiovascular</h3>
                 <p className="text-slate-300">
-                  Monitore o progresso dos pacientes e analise dados do estudo em tempo real.
+                  Monitore o progresso das pesquisas e analise dados dos estudos em tempo real.
                 </p>
                 <div className="flex items-center space-x-4 text-sm">
                   <div className="flex items-center space-x-2">
                     <Heart className="h-4 w-4 text-red-400" />
-                    <span>24 pacientes ativos</span>
+                    <span>24 pesquisas ativas</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Activity className="h-4 w-4 text-emerald-400" />
@@ -209,19 +209,19 @@ const ResearcherDashboard: React.FC = () => {
               <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
                 <BarChart3 className="h-5 w-5 text-slate-600" />
               </div>
-              <span>Visão Geral do Estudo</span>
+              <span>Visão Geral dos Estudos</span>
             </CardTitle>
             <CardDescription>
-              Distribuição de pacientes por etapa do protocolo cardiovascular
+              Distribuição de pesquisas por etapa do protocolo cardiovascular
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {[
-                { stage: 'Triagem', count: 6, total: 24, color: 'bg-blue-500' },
-                { stage: 'Baseline', count: 8, total: 24, color: 'bg-emerald-500' },
-                { stage: 'Tratamento', count: 7, total: 24, color: 'bg-purple-500' },
-                { stage: 'Follow-up', count: 3, total: 24, color: 'bg-amber-500' }
+                { stage: 'Planejamento', count: 6, total: 24, color: 'bg-blue-500' },
+                { stage: 'Execução', count: 8, total: 24, color: 'bg-emerald-500' },
+                { stage: 'Análise', count: 7, total: 24, color: 'bg-purple-500' },
+                { stage: 'Finalização', count: 3, total: 24, color: 'bg-amber-500' }
               ].map((item, index) => (
                 <div key={index} className="text-center space-y-3">
                   <div className="space-y-2">
@@ -265,7 +265,7 @@ const ResearcherDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Atividade Recente e Pacientes Prioritários */}
+        {/* Atividade Recente e Pesquisas Prioritárias */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Atividade Recente */}
           <Card className="border-0 shadow-lg">
@@ -289,7 +289,7 @@ const ResearcherDashboard: React.FC = () => {
                     </div>
                     <div className="flex-1 space-y-1">
                       <p className="text-sm">
-                        <span className="font-semibold text-slate-900">{activity.patient}</span>
+                        <span className="font-semibold text-slate-900">{activity.research}</span>
                         <span className="text-slate-600"> {activity.message}</span>
                       </p>
                       <p className="text-xs text-slate-500">{activity.time}</p>
@@ -300,34 +300,34 @@ const ResearcherDashboard: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Pacientes Prioritários */}
+          {/* Pesquisas Prioritárias */}
           <Card className="border-0 shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
                   <Heart className="h-5 w-5 text-red-600" />
                 </div>
-                <span>Pacientes em Destaque</span>
+                <span>Pesquisas em Destaque</span>
               </CardTitle>
               <CardDescription>
-                Pacientes que necessitam atenção especial
+                Estudos que necessitam atenção especial
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {priorityPatients.map((patient, index) => (
+                {priorityResearch.map((research, index) => (
                   <div
                     key={index}
-                    className={`p-4 border-2 rounded-xl ${patient.color} hover:scale-[1.02] transition-transform duration-300`}
+                    className={`p-4 border-2 rounded-xl ${research.color} hover:scale-[1.02] transition-transform duration-300`}
                   >
                     <div className="flex justify-between items-start">
                       <div className="space-y-2">
-                        <p className="font-semibold text-slate-900">{patient.name}</p>
-                        <p className="text-sm text-slate-600">{patient.issue}</p>
+                        <p className="font-semibold text-slate-900">{research.name}</p>
+                        <p className="text-sm text-slate-600">{research.issue}</p>
                         <div className="flex items-center space-x-3 text-xs text-slate-500">
-                          <span>Risco: {patient.risk}</span>
+                          <span>Risco: {research.risk}</span>
                           <span>•</span>
-                          <span>{patient.lastUpdate}</span>
+                          <span>{research.lastUpdate}</span>
                         </div>
                       </div>
                       <Button size="sm" variant="outline" className="hover:bg-white">

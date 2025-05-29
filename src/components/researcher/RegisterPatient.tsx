@@ -7,44 +7,46 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, UserPlus, Save } from 'lucide-react';
+import { ArrowLeft, FileText, Save } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 
-interface PatientForm {
+interface ResearchForm {
   name: string;
-  email: string;
-  phone: string;
-  age: string;
-  gender: string;
-  address: string;
-  medicalHistory: string;
-  allergies: string;
-  currentMedications: string;
-  emergencyContact: string;
-  emergencyPhone: string;
-  consentSigned: boolean;
+  type: string;
+  description: string;
+  objectives: string;
+  methodology: string;
+  duration: string;
+  targetPopulation: string;
+  sampleSize: string;
+  primaryEndpoint: string;
+  secondaryEndpoints: string;
+  inclusionCriteria: string;
+  exclusionCriteria: string;
+  ethicsApproval: boolean;
 }
 
 const RegisterPatient: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<PatientForm>({
+  const [formData, setFormData] = useState<ResearchForm>({
     name: '',
-    email: '',
-    phone: '',
-    age: '',
-    gender: '',
-    address: '',
-    medicalHistory: '',
-    allergies: '',
-    currentMedications: '',
-    emergencyContact: '',
-    emergencyPhone: '',
-    consentSigned: false
+    type: '',
+    description: '',
+    objectives: '',
+    methodology: '',
+    duration: '',
+    targetPopulation: '',
+    sampleSize: '',
+    primaryEndpoint: '',
+    secondaryEndpoints: '',
+    inclusionCriteria: '',
+    exclusionCriteria: '',
+    ethicsApproval: false
   });
 
-  const handleInputChange = (field: keyof PatientForm, value: string | boolean) => {
+  const handleInputChange = (field: keyof ResearchForm, value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -55,7 +57,7 @@ const RegisterPatient: React.FC = () => {
     e.preventDefault();
     
     // Validation
-    if (!formData.name || !formData.email || !formData.phone || !formData.age) {
+    if (!formData.name || !formData.type || !formData.description || !formData.objectives) {
       toast({
         title: "Campos obrigatórios",
         description: "Por favor, preencha todos os campos obrigatórios.",
@@ -64,10 +66,10 @@ const RegisterPatient: React.FC = () => {
       return;
     }
 
-    if (!formData.consentSigned) {
+    if (!formData.ethicsApproval) {
       toast({
-        title: "Consentimento necessário",
-        description: "O termo de consentimento deve ser assinado.",
+        title: "Aprovação ética necessária",
+        description: "A aprovação do comitê de ética deve ser confirmada.",
         variant: "destructive"
       });
       return;
@@ -77,36 +79,37 @@ const RegisterPatient: React.FC = () => {
     
     try {
       // Simulate API call
-      console.log('Registering patient:', formData);
+      console.log('Registering research:', formData);
       
       // Mock successful registration
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       toast({
-        title: "Paciente cadastrado com sucesso!",
-        description: `${formData.name} foi adicionado ao estudo.`
+        title: "Pesquisa cadastrada com sucesso!",
+        description: `${formData.name} foi adicionada ao sistema.`
       });
       
       // Reset form
       setFormData({
         name: '',
-        email: '',
-        phone: '',
-        age: '',
-        gender: '',
-        address: '',
-        medicalHistory: '',
-        allergies: '',
-        currentMedications: '',
-        emergencyContact: '',
-        emergencyPhone: '',
-        consentSigned: false
+        type: '',
+        description: '',
+        objectives: '',
+        methodology: '',
+        duration: '',
+        targetPopulation: '',
+        sampleSize: '',
+        primaryEndpoint: '',
+        secondaryEndpoints: '',
+        inclusionCriteria: '',
+        exclusionCriteria: '',
+        ethicsApproval: false
       });
       
     } catch (error) {
       toast({
         title: "Erro no cadastro",
-        description: "Ocorreu um erro ao cadastrar o paciente. Tente novamente.",
+        description: "Ocorreu um erro ao cadastrar a pesquisa. Tente novamente.",
         variant: "destructive"
       });
     } finally {
@@ -115,7 +118,7 @@ const RegisterPatient: React.FC = () => {
   };
 
   return (
-    <Layout title="Cadastrar Paciente">
+    <Layout title="Cadastrar Pesquisa">
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <Button
@@ -129,25 +132,25 @@ const RegisterPatient: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Personal Information */}
+          {/* Informações Básicas */}
           <Card className="border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <UserPlus className="h-5 w-5 text-blue-600" />
-                <span>Informações Pessoais</span>
+                <FileText className="h-5 w-5 text-blue-600" />
+                <span>Informações Básicas</span>
               </CardTitle>
               <CardDescription>
-                Dados básicos do paciente
+                Dados principais da pesquisa cardiovascular
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Nome Completo *</Label>
+                  <Label htmlFor="name">Nome da Pesquisa *</Label>
                   <Input
                     id="name"
                     type="text"
-                    placeholder="Nome completo do paciente"
+                    placeholder="Ex: Estudo sobre Hipertensão Arterial"
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     required
@@ -155,176 +158,194 @@ const RegisterPatient: React.FC = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="email@exemplo.com"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Telefone *</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="(11) 99999-9999"
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="age">Idade *</Label>
-                  <Input
-                    id="age"
-                    type="number"
-                    placeholder="Idade"
-                    min="18"
-                    max="100"
-                    value={formData.age}
-                    onChange={(e) => handleInputChange('age', e.target.value)}
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="gender">Gênero</Label>
-                  <Select value={formData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
+                  <Label htmlFor="type">Tipo de Estudo *</Label>
+                  <Select value={formData.type} onValueChange={(value) => handleInputChange('type', value)}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione o gênero" />
+                      <SelectValue placeholder="Selecione o tipo" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="male">Masculino</SelectItem>
-                      <SelectItem value="female">Feminino</SelectItem>
-                      <SelectItem value="other">Outro</SelectItem>
-                      <SelectItem value="not_informed">Não informado</SelectItem>
+                      <SelectItem value="clinical_trial">Ensaio Clínico</SelectItem>
+                      <SelectItem value="observational">Estudo Observacional</SelectItem>
+                      <SelectItem value="pilot_study">Estudo Piloto</SelectItem>
+                      <SelectItem value="cohort_study">Estudo de Coorte</SelectItem>
+                      <SelectItem value="case_control">Caso-Controle</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="address">Endereço</Label>
-                <Input
-                  id="address"
-                  type="text"
-                  placeholder="Endereço completo"
-                  value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
+                <Label htmlFor="description">Descrição *</Label>
+                <Textarea
+                  id="description"
+                  placeholder="Descreva resumidamente a pesquisa..."
+                  value={formData.description}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  rows={3}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="objectives">Objetivos *</Label>
+                <Textarea
+                  id="objectives"
+                  placeholder="Descreva os objetivos da pesquisa..."
+                  value={formData.objectives}
+                  onChange={(e) => handleInputChange('objectives', e.target.value)}
+                  rows={3}
+                  required
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* Medical Information */}
+          {/* Metodologia */}
           <Card className="border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle>Informações Médicas</CardTitle>
+              <CardTitle>Metodologia</CardTitle>
               <CardDescription>
-                Histórico médico e medicações atuais
+                Detalhes metodológicos do estudo
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="medicalHistory">Histórico Médico</Label>
+                <Label htmlFor="methodology">Metodologia</Label>
                 <Textarea
-                  id="medicalHistory"
-                  placeholder="Descreva o histórico médico relevante..."
-                  value={formData.medicalHistory}
-                  onChange={(e) => handleInputChange('medicalHistory', e.target.value)}
-                  rows={3}
+                  id="methodology"
+                  placeholder="Descreva a metodologia utilizada..."
+                  value={formData.methodology}
+                  onChange={(e) => handleInputChange('methodology', e.target.value)}
+                  rows={4}
                 />
               </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="duration">Duração</Label>
+                  <Input
+                    id="duration"
+                    type="text"
+                    placeholder="Ex: 12 meses"
+                    value={formData.duration}
+                    onChange={(e) => handleInputChange('duration', e.target.value)}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="targetPopulation">População-Alvo</Label>
+                  <Input
+                    id="targetPopulation"
+                    type="text"
+                    placeholder="Ex: Adultos hipertensos"
+                    value={formData.targetPopulation}
+                    onChange={(e) => handleInputChange('targetPopulation', e.target.value)}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="sampleSize">Tamanho da Amostra</Label>
+                  <Input
+                    id="sampleSize"
+                    type="number"
+                    placeholder="Ex: 100"
+                    value={formData.sampleSize}
+                    onChange={(e) => handleInputChange('sampleSize', e.target.value)}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Endpoints */}
+          <Card className="border-0 bg-white/80 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle>Endpoints</CardTitle>
+              <CardDescription>
+                Desfechos primários e secundários
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="allergies">Alergias</Label>
+                <Label htmlFor="primaryEndpoint">Endpoint Primário</Label>
                 <Textarea
-                  id="allergies"
-                  placeholder="Liste alergias conhecidas..."
-                  value={formData.allergies}
-                  onChange={(e) => handleInputChange('allergies', e.target.value)}
+                  id="primaryEndpoint"
+                  placeholder="Descreva o desfecho primário..."
+                  value={formData.primaryEndpoint}
+                  onChange={(e) => handleInputChange('primaryEndpoint', e.target.value)}
                   rows={2}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="currentMedications">Medicações Atuais</Label>
+                <Label htmlFor="secondaryEndpoints">Endpoints Secundários</Label>
                 <Textarea
-                  id="currentMedications"
-                  placeholder="Liste medicações em uso..."
-                  value={formData.currentMedications}
-                  onChange={(e) => handleInputChange('currentMedications', e.target.value)}
+                  id="secondaryEndpoints"
+                  placeholder="Descreva os desfechos secundários..."
+                  value={formData.secondaryEndpoints}
+                  onChange={(e) => handleInputChange('secondaryEndpoints', e.target.value)}
                   rows={3}
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* Emergency Contact */}
+          {/* Critérios */}
           <Card className="border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle>Contato de Emergência</CardTitle>
+              <CardTitle>Critérios de Elegibilidade</CardTitle>
               <CardDescription>
-                Informações para casos de emergência
+                Critérios de inclusão e exclusão
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="emergencyContact">Nome do Contato</Label>
-                  <Input
-                    id="emergencyContact"
-                    type="text"
-                    placeholder="Nome completo"
-                    value={formData.emergencyContact}
-                    onChange={(e) => handleInputChange('emergencyContact', e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="emergencyPhone">Telefone de Emergência</Label>
-                  <Input
-                    id="emergencyPhone"
-                    type="tel"
-                    placeholder="(11) 99999-9999"
-                    value={formData.emergencyPhone}
-                    onChange={(e) => handleInputChange('emergencyPhone', e.target.value)}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="inclusionCriteria">Critérios de Inclusão</Label>
+                <Textarea
+                  id="inclusionCriteria"
+                  placeholder="Liste os critérios de inclusão..."
+                  value={formData.inclusionCriteria}
+                  onChange={(e) => handleInputChange('inclusionCriteria', e.target.value)}
+                  rows={3}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="exclusionCriteria">Critérios de Exclusão</Label>
+                <Textarea
+                  id="exclusionCriteria"
+                  placeholder="Liste os critérios de exclusão..."
+                  value={formData.exclusionCriteria}
+                  onChange={(e) => handleInputChange('exclusionCriteria', e.target.value)}
+                  rows={3}
+                />
               </div>
             </CardContent>
           </Card>
 
-          {/* Consent */}
+          {/* Aprovação Ética */}
           <Card className="border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle>Termo de Consentimento</CardTitle>
+              <CardTitle>Aprovação Ética</CardTitle>
               <CardDescription>
-                Confirmação de participação no estudo
+                Confirmação de aprovação pelo comitê de ética
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-start space-x-3">
                 <input
                   type="checkbox"
-                  id="consent"
-                  checked={formData.consentSigned}
-                  onChange={(e) => handleInputChange('consentSigned', e.target.checked)}
+                  id="ethics"
+                  checked={formData.ethicsApproval}
+                  onChange={(e) => handleInputChange('ethicsApproval', e.target.checked)}
                   className="mt-1"
                   required
                 />
-                <label htmlFor="consent" className="text-sm text-gray-600 leading-5">
-                  Confirmo que o paciente leu, compreendeu e assinou o termo de consentimento 
-                  livre e esclarecido para participação neste estudo de pesquisa. O paciente 
-                  foi informado sobre os procedimentos, riscos, benefícios e direitos 
-                  relacionados à sua participação.
+                <label htmlFor="ethics" className="text-sm text-gray-600 leading-5">
+                  Confirmo que esta pesquisa foi aprovada pelo Comitê de Ética em Pesquisa (CEP) 
+                  competente e que todos os procedimentos estão em conformidade com as diretrizes 
+                  éticas para pesquisa envolvendo seres humanos estabelecidas pela Resolução 
+                  CNS 466/2012 e suas complementares.
                 </label>
               </div>
             </CardContent>
@@ -351,7 +372,7 @@ const RegisterPatient: React.FC = () => {
               ) : (
                 <>
                   <Save className="h-4 w-4 mr-2" />
-                  Cadastrar Paciente
+                  Cadastrar Pesquisa
                 </>
               )}
             </Button>
